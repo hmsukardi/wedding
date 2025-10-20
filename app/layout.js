@@ -17,13 +17,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
-}
+    return (
+      <html lang="en">
+        <body
+          className={`
+            ${geistSans.variable} 
+            ${geistMono.variable} 
+            antialiased 
+            min-h-screen 
+            bg-[--color-background] 
+            text-[--color-foreground]
+          `}
+        >
+          {children}
+        </body>
+      </html>
+    );
+  }
+  

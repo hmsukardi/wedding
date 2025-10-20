@@ -1,17 +1,33 @@
 @import "tailwindcss";
 
+/* 🌸 Wedding Invitation Theme (Pink + Navy + White) */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
+
+  /* Warna utama */
+  --color-pink: #f9a8d4; /* Soft Pink */
+  --color-navy: #1e3a8a; /* Deep Navy */
+  --color-accent: #fde7ef; /* Blush background */
+  
 }
 
+/* 🎨 Tailwind Theme Inline Configuration */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Warna brand */
+  --color-primary: var(--color-pink);
+  --color-secondary: var(--color-navy);
+  --color-accent: var(--color-accent);
+
+  /* Font */
+  --font-sans: 'Poppins', 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
 }
 
+/* 🌙 Mode gelap opsional */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,8 +35,36 @@
   }
 }
 
+/* 🧩 Global Style Reset */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
 }
+
+/* Hilangkan scrollbar di highlight story */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+  
