@@ -40,10 +40,10 @@ export default function ProfileHeader() {
 
       {/* Nama & bio */}
       <div className="mt-3 pl-3 text-sm">
-        <p className="font-semibold text-pink-600 text-[15px]">Rama & Sinta</p>
+        <p className="font-semibold text-pink-600 text-[15px]">Riris & Hamid</p>
         <p className="text-gray-700 leading-tight">
-          💍 20 Desember 2025 <br />
-          📍 The Forest Villa, Bandung
+          💍 15 Oktober 2026 <br />
+          📍 Mijen, Semarang
         </p>
       </div>
 
