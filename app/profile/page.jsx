@@ -75,16 +75,22 @@ export default function ProfilePage() {
       <Highlights />
 
       {/* Grid Foto */}
-      <section className="grid grid-cols-3 gap-1 mt-2">
+        <section className="grid grid-cols-3 gap-1 mt-2">
         {Array.from({ length: 9 }).map((_, i) => (
-          <img
+            <div
             key={i}
-            src={`https://picsum.photos/300/300?random=${i + 1}`}
-            alt={`Foto ${i}`}
-            className="w-full h-32 object-cover"
-          />
+            onClick={() => router.push(`/photo/${i + 1}`)}
+            className="cursor-pointer hover:opacity-80 transition"
+            >
+            <img
+                src={`https://picsum.photos/300/300?random=${i + 1}`}
+                alt={`Foto ${i}`}
+                className="w-full h-32 object-cover"
+            />
+            </div>
         ))}
-      </section>
+        </section>
+
 
       {/* RSVP Modal */}
       <RSVPModal isOpen={showRSVP} onClose={() => setShowRSVP(false)} />
