@@ -30,10 +30,13 @@ export default function HighlightStories({ isOpen, onClose, stories, title }) {
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(timer);
-          setCurrentIndex((prevIndex) => prevIndex + 1);
-          return 0;
-        }
+            clearInterval(timer);
+            setCurrentIndex((prevIndex) =>
+              prevIndex + 1 < stories.length ? prevIndex + 1 : prevIndex
+            );
+            return 0;
+          }
+          
         return prev + step;
       });
     }, interval);
