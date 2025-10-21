@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebaseConfig";
 import {
   collection,
@@ -18,9 +18,12 @@ export default function MessageRoomContent() {
   const bride = searchParams.get("bride");
   const groom = searchParams.get("groom");
   const guest = searchParams.get("guest");
+  const bottomRef = useRef(null);
 
-  let userRole = "guest";
-  let userName = "Tamu";
+  const randomId = Math.floor(Math.random() * 10000);
+    let userRole = "guest";
+    let userName = "Tamu " + randomId;
+
   if (bride) {
     userRole = "bride";
     userName = decodeURIComponent(bride);
@@ -45,6 +48,10 @@ export default function MessageRoomContent() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -83,33 +90,37 @@ export default function MessageRoomContent() {
       </div>
 
       {/* Chat messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${
-              msg.sender === userName ? "justify-end" : "justify-start"
+    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+    {messages.map((msg) => (
+        <div
+        key={msg.id}
+        className={`flex ${
+            msg.sender === userName ? "justify-end" : "justify-start"
+        }`}
+        >
+        <div
+            className={`px-3 py-2 rounded-lg text-sm max-w-[75%] transition ${
+            msg.sender === userName
+                ? msg.role === "bride" || msg.role === "groom"
+                ? "bg-blue-500 text-white rounded-br-none"
+                : "bg-pink-500 text-white rounded-br-none"
+                : msg.role === "bride" || msg.role === "groom"
+                ? "bg-blue-100 text-blue-800 rounded-bl-none"
+                : "bg-gray-200 text-gray-800 rounded-bl-none"
             }`}
-          >
-            <div
-              className={`px-3 py-2 rounded-lg text-sm max-w-[75%] transition ${
-                msg.sender === userName
-                  ? msg.role === "bride" || msg.role === "groom"
-                    ? "bg-blue-500 text-white rounded-br-none"
-                    : "bg-pink-500 text-white rounded-br-none"
-                  : msg.role === "bride" || msg.role === "groom"
-                  ? "bg-blue-100 text-blue-800 rounded-bl-none"
-                  : "bg-gray-200 text-gray-800 rounded-bl-none"
-              }`}
-            >
-              <p className="font-semibold text-xs mb-1 opacity-80">
-                {msg.sender}
-              </p>
-              <p>{msg.text}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+        >
+            <p className="font-semibold text-xs mb-1 opacity-80">
+            {msg.sender}
+            </p>
+            <p>{msg.text}</p>
+        </div>
+        </div>
+    ))}
+
+    {/* ⬇️ Ref ini untuk scroll otomatis */}
+    <div ref={bottomRef} />
+    </div>
+
 
       {/* Input */}
       <form
