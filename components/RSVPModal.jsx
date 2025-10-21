@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../lib/firebaseConfig"; // import Firestore
 
 export default function RSVPModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -7,16 +9,29 @@ export default function RSVPModal({ isOpen, onClose }) {
     attending: "",
     guests: 1,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("RSVP data:", formData);
-    alert("Terima kasih atas konfirmasinya 💖");
-    onClose();
+    if (!formData.name || !formData.attending) return;
+
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "rsvp"), {
+        ...formData,
+        createdAt: serverTimestamp(),
+      });
+      alert("💖 Terima kasih, konfirmasi kamu sudah tersimpan!");
+      onClose();
+    } catch (error) {
+      console.error("Error saving RSVP:", error);
+      alert("Terjadi kesalahan, coba lagi ya 🙏");
+    }
+    setLoading(false);
   };
 
   if (!isOpen) return null;
@@ -63,9 +78,10 @@ export default function RSVPModal({ isOpen, onClose }) {
 
           <button
             type="submit"
+            disabled={loading}
             className="bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md transition"
           >
-            Kirim
+            {loading ? "Mengirim..." : "Kirim"}
           </button>
         </form>
 
