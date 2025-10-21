@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { db } from "@/lib/firebaseConfig";
 import {
   collection,
@@ -10,14 +11,33 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { useRouter } from "next/navigation";
 
 export default function MessageRoom() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ambil parameter dari URL
+  const bride = searchParams.get("bride");
+  const groom = searchParams.get("groom");
+  const guest = searchParams.get("guest");
+
+  // tentukan siapa user sekarang
+  let userRole = "guest";
+  let userName = "Tamu";
+  if (bride) {
+    userRole = "bride";
+    userName = decodeURIComponent(bride);
+  } else if (groom) {
+    userRole = "groom";
+    userName = decodeURIComponent(groom);
+  } else if (guest) {
+    userName = decodeURIComponent(guest);
+  }
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const router = useRouter();
 
-  // 🔁 Ambil data realtime dari Firestore
+  // ambil data realtime dari Firestore
   useEffect(() => {
     const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -30,19 +50,21 @@ export default function MessageRoom() {
     return () => unsubscribe();
   }, []);
 
-  // 💌 Kirim pesan baru
+  // kirim pesan baru
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
+
     try {
       await addDoc(collection(db, "messages"), {
-        sender: "Tamu",
+        sender: userName,
+        role: userRole,
         text: input.trim(),
         createdAt: serverTimestamp(),
       });
       setInput("");
     } catch (err) {
-      console.error("Gagal mengirim pesan:", err);
+      console.error("Gagal kirim pesan:", err);
     }
   };
 
@@ -57,9 +79,15 @@ export default function MessageRoom() {
           >
             ←
           </button>
-          <h2 className="font-semibold text-pink-600 text-lg">
-            💌 Ucapan untuk Rama & Sinta
-          </h2>
+          <div>
+            <h2 className="font-semibold text-pink-600 text-lg leading-tight">
+              💌 Ucapan untuk Rama & Sinta
+            </h2>
+            <p className="text-xs text-gray-500">
+              Kamu login sebagai{" "}
+              <span className="font-medium text-gray-700">{userName}</span>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -74,13 +102,17 @@ export default function MessageRoom() {
           <div
             key={msg.id}
             className={`flex ${
-              msg.sender === "Tamu" ? "justify-end" : "justify-start"
+              msg.sender === userName ? "justify-end" : "justify-start"
             }`}
           >
             <div
-              className={`px-3 py-2 rounded-lg text-sm max-w-[75%] ${
-                msg.sender === "Tamu"
-                  ? "bg-pink-500 text-white rounded-br-none"
+              className={`px-3 py-2 rounded-lg text-sm max-w-[75%] transition ${
+                msg.sender === userName
+                  ? msg.role === "bride" || msg.role === "groom"
+                    ? "bg-blue-500 text-white rounded-br-none"
+                    : "bg-pink-500 text-white rounded-br-none"
+                  : msg.role === "bride" || msg.role === "groom"
+                  ? "bg-blue-100 text-blue-800 rounded-bl-none"
                   : "bg-gray-200 text-gray-800 rounded-bl-none"
               }`}
             >

@@ -68,3 +68,12 @@ body {
     animation: fade-in 0.2s ease-out;
   }
   
+/* Hilangkan scrollbar horizontal */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
