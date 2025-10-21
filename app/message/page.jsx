@@ -1,26 +1,49 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { db } from "@/lib/firebaseConfig";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-export default function MessagePage() {
+export default function MessageRoom() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
   const router = useRouter();
 
-  const [messages, setMessages] = useState([
-    { sender: "Dinda", text: "Selamat yaaa 💖" },
-    { sender: "Budi", text: "Gak sabar nunggu harinya 🥰" },
-  ]);
-  const [input, setInput] = useState("");
+  // 🔁 Ambil data realtime dari Firestore
+  useEffect(() => {
+    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMessages(data);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const handleSend = (e) => {
+  // 💌 Kirim pesan baru
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (input.trim() === "") return;
-
-    const newMessage = {
-      sender: "Tamu",
-      text: input,
-    };
-    setMessages([...messages, newMessage]);
-    setInput("");
+    if (!input.trim()) return;
+    try {
+      await addDoc(collection(db, "messages"), {
+        sender: "Tamu",
+        text: input.trim(),
+        createdAt: serverTimestamp(),
+      });
+      setInput("");
+    } catch (err) {
+      console.error("Gagal mengirim pesan:", err);
+    }
   };
 
   return (
@@ -40,11 +63,16 @@ export default function MessagePage() {
         </div>
       </div>
 
-      {/* Messages */}
+      {/* Chat messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg, i) => (
+        {messages.length === 0 && (
+          <p className="text-center text-gray-400 text-sm">
+            Belum ada ucapan, jadilah yang pertama 💕
+          </p>
+        )}
+        {messages.map((msg) => (
           <div
-            key={i}
+            key={msg.id}
             className={`flex ${
               msg.sender === "Tamu" ? "justify-end" : "justify-start"
             }`}
@@ -56,7 +84,9 @@ export default function MessagePage() {
                   : "bg-gray-200 text-gray-800 rounded-bl-none"
               }`}
             >
-              <p className="font-semibold text-xs mb-1 opacity-80">{msg.sender}</p>
+              <p className="font-semibold text-xs mb-1 opacity-80">
+                {msg.sender}
+              </p>
               <p>{msg.text}</p>
             </div>
           </div>
@@ -72,8 +102,8 @@ export default function MessagePage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ketik ucapanmu..."
-          className="flex-1 border rounded-md p-2 text-sm"
+          placeholder="Tulis ucapanmu..."
+          className="flex-1 border rounded-md p-2 text-sm focus:outline-pink-500"
         />
         <button
           type="submit"
