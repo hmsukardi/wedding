@@ -42,15 +42,15 @@ export default function PhotoDetail() {
       {photos.slice(startIndex).map((photo) => (
         <div key={photo.id} className="border-b border-gray-200 bg-white">
             {/* Header akun + lokasi */}
-            <div className="flex items-center justify-between px-4 py-2 bg-white">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
                 <img
-                src="https://i.pravatar.cc/50?img=47"
-                alt="Profile"
-                className="w-8 h-8 rounded-full border border-gray-200"
+                src="https://i.postimg.cc/KYsZq3HJ/photo-profile-r-h.jpg"
+                alt="Riris & Hamid"
+                className="w-10 h-10 rounded-full object-cover border border-gray-200" // kecilin disini
                 />
                 <div>
-                <p className="font-semibold text-sm text-gray-900">Rama & Sinta</p>
+                <h2 className="font-semibold text-gray-800 text-sm">Riris & Hamid</h2>
                 <p className="text-xs text-gray-500">{photo.location}</p>
                 </div>
             </div>
@@ -74,7 +74,7 @@ export default function PhotoDetail() {
             </div>
 
             <p className="text-sm text-gray-800 mb-2">
-                <span className="font-semibold text-gray-900">Rama & Sinta</span>{" "}
+                <span className="font-semibold text-gray-900">Riris dan Hamid</span>{" "}
                 {photo.caption}
             </p>
 

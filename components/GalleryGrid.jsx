@@ -21,8 +21,8 @@ export default function GalleryGrid() {
               alt={`Foto ${i}`}
               loading="lazy"
               onLoad={() => setLoaded(true)}
-              className={`w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-[1.05]
-                ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
+              className={`w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-[1.02]
+                ${loaded ? "opacity-100" : "opacity-0"} transition-opacity duration-500`}
             />
           </div>
         );

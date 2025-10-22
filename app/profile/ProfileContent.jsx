@@ -21,7 +21,7 @@ export default function ProfileContent() {
             <div className="p-[3px] rounded-full bg-gradient-to-tr from-pink-400 to-blue-300">
               <div className="p-[3px] rounded-full bg-white">
                 <img
-                  src="https://i.pravatar.cc/150?img=47"
+                  src="https://i.postimg.cc/KYsZq3HJ/photo-profile-r-h.jpg"
                   alt="Foto Pasangan"
                   className="rounded-full w-24 h-24 object-cover"
                 />
@@ -47,7 +47,7 @@ export default function ProfileContent() {
 
         {/* Nama & Bio */}
         <div className="mt-3 pl-3 text-sm">
-          <p className="font-semibold text-pink-600 text-[15px]">Rama & Sinta</p>
+          <p className="font-semibold text-pink-600 text-[15px]">Riris & Hamid</p>
           <p className="text-gray-700 leading-tight">
             💍 20 Desember 2025 <br />
             📍 The Forest Villa, Bandung
@@ -64,7 +64,7 @@ export default function ProfileContent() {
           </button>
           <button
             onClick={() => router.push(`/message?guest=${encodeURIComponent(guestName)}`)}
-            className="flex-1 border border-gray-300 py-1.5 rounded-md font-medium hover:bg-gray-100 transition"
+            className="flex-1 border border-blue-400 text-blue-500 py-1.5 rounded-md font-medium hover:bg-blue-50 transition"
           >
             Message
           </button>
